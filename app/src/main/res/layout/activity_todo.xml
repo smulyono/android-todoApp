@@ -28,7 +28,9 @@
         android:layout_height="wrap_content"
         android:text="@string/addBtn"
         android:id="@+id/addBtn"
+        android:onClick="onAddedClick"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:nestedScrollingEnabled="false" />
 </RelativeLayout>
