@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">ToDo</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="app_name">My ToDo</string>
     <string name="action_settings">Settings</string>
     <string name="addItemHint">Add a new item</string>
     <string name="addBtn">Add</string>
 
+    <string name="title_activity_edit_item">Edit ToDo Item</string>
+    <string name="editItemText">Edit item below :</string>
+    <string name="saveBtnText">Save</string>
+    <string name="editMessage">Item updated!</string>
+
+    <string name="noEmptyString">Todo item cannot be empty text</string>
 </resources>

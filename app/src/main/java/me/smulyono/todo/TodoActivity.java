@@ -1,5 +1,6 @@
 package me.smulyono.todo;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.apache.commons.io.FileUtils;
 
@@ -20,7 +22,7 @@ import java.util.List;
 
 
 public class TodoActivity extends ActionBarActivity {
-    private final String TAG = TodoActivity.class.getSimpleName();
+    private final String TAG = this.getClass().getSimpleName();
     // Internal representations of the todo item list
     private List<String> todoItems;
     // every view component will use Adapter as their models
@@ -29,6 +31,8 @@ public class TodoActivity extends ActionBarActivity {
     // List view UI reference
     private ListView lvItems;
     private EditText etNewItem;
+    // REQUEST_CODE used to determine result type
+    private final int EDIT_REQUEST = 20;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,28 +57,43 @@ public class TodoActivity extends ActionBarActivity {
         lvItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View item, int position, long id) {
-                Log.i(TAG, "Removing item in position " + position);
+                Log.d(TAG, "Removing item in position " + position);
                 todoItems.remove(position);
-                atodoItems.notifyDataSetChanged();
-                writeItem();
+                flush();
                 return true;
+            }
+        });
+
+        lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d(TAG, "Edit item in position " + position);
+                // http://guides.codepath.com/android/Using-Intents-to-Create-Flows
+                Intent i = new Intent(TodoActivity.this, EditItemActivity.class);
+                // passing parameters there
+                i.putExtra("itemName", todoItems.get(position));
+                i.putExtra("itemPosition", position);
+                startActivityForResult(i, EDIT_REQUEST);
             }
         });
     }
 
     public void onAddedClick(View v){
-        Log.i(TAG, "button click");
-        atodoItems.add(etNewItem.getText().toString());
-        etNewItem.setText("");
-        writeItem();
-        Log.i(TAG, "Items count : " + todoItems.size());
+        // only if the added item is not empty string
+        if (etNewItem.getText().length() > 0){
+            Log.d(TAG, "button click");
+            atodoItems.add(etNewItem.getText().toString());
+            etNewItem.setText("");
+            writeItem();
+            Log.d(TAG, "Items count : " + todoItems.size());
+        }
     }
 
     // Access list items from a file
     private void readItems(){
         // get standard directory
         File filesDir = getFilesDir();
-        Log.i(TAG, "File directory : " + filesDir.getAbsolutePath());
+        Log.d(TAG, "File directory : " + filesDir.getAbsolutePath());
         File todoFile = new File(filesDir, "todo.txt");
         try {
             todoItems = new ArrayList<String>(FileUtils.readLines(todoFile));
@@ -91,6 +110,11 @@ public class TodoActivity extends ActionBarActivity {
         } catch (IOException ev){
             ev.printStackTrace();
         }
+    }
+
+    private void flush(){
+        atodoItems.notifyDataSetChanged();
+        writeItem();
     }
 
     @Override
@@ -113,5 +137,21 @@ public class TodoActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // when activity received back
+        if (requestCode == EDIT_REQUEST && resultCode == RESULT_OK){
+            String newItemName = data.getExtras().getString("itemName");
+            int position = data.getExtras().getInt("itemPosition");
+            if (newItemName != null && !newItemName.isEmpty()) {
+                Log.d(TAG, "Updating " + position + " with " + newItemName);
+                todoItems.set(position, newItemName);
+                flush();
+                // show some toast
+                Toast.makeText(this, R.string.editMessage, Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
