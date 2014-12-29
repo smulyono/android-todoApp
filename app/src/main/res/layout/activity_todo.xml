@@ -13,26 +13,6 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:fastScrollAlwaysVisible="false"
-        android:smoothScrollbar="true"
-        android:layout_above="@+id/addBtn" />
+        android:smoothScrollbar="true" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/etNewItem"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:hint="@string/addItemHint" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/addBtn"
-        android:id="@+id/addBtn"
-        android:onClick="onAddedClick"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:nestedScrollingEnabled="false" />
 </RelativeLayout>

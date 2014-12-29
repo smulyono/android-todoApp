@@ -2,14 +2,20 @@
 <resources>
 
     <string name="app_name">My ToDo</string>
-    <string name="action_settings">Settings</string>
-    <string name="addItemHint">Add a new item</string>
+    <string name="action_settings_additem">Add(+)</string>
+
+    <string name="addItemHint">Add a new task</string>
     <string name="addBtn">Add</string>
+    <string name="addTxtTitle">Add new task ?</string>
 
     <string name="title_activity_edit_item">Edit ToDo Item</string>
     <string name="editItemText">Edit item below :</string>
     <string name="saveBtnText">Save</string>
     <string name="editMessage">Item updated!</string>
-
+    
     <string name="noEmptyString">Todo item cannot be empty text</string>
+    
+    <string name="hello_blank_fragment">Edit ToDo Item</string>
+    <string name="AddItemText">What is your next big task ?</string>
+
 </resources>

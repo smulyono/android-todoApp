@@ -1,6 +1,8 @@
 package me.smulyono.todo;
 
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,7 +32,6 @@ public class TodoActivity extends ActionBarActivity {
     private ArrayAdapter<String> atodoItems;
     // List view UI reference
     private ListView lvItems;
-    private EditText etNewItem;
     // REQUEST_CODE used to determine result type
     private final int EDIT_REQUEST = 20;
 
@@ -39,7 +40,6 @@ public class TodoActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_todo);
         //
-        etNewItem = (EditText) findViewById(R.id.etNewItem);
         lvItems = (ListView) findViewById(R.id.lvItems);
         readItems();
         // create adapter with the data (e.g list<String>)
@@ -73,22 +73,21 @@ public class TodoActivity extends ActionBarActivity {
                 // passing parameters there
                 i.putExtra("itemName", todoItems.get(position));
                 i.putExtra("itemPosition", position);
+                
                 startActivityForResult(i, EDIT_REQUEST);
+
+//                EditItemNameFragment editItemNameDialog = EditItemNameFragment.newInstance("Edit Item");
+//                editItemNameDialog.show(getFragmentManager(), "Edit Item");
             }
         });
     }
-
-    public void onAddedClick(View v){
-        // only if the added item is not empty string
-        if (etNewItem.getText().length() > 0){
-            Log.d(TAG, "button click");
-            atodoItems.add(etNewItem.getText().toString());
-            etNewItem.setText("");
-            writeItem();
-            Log.d(TAG, "Items count : " + todoItems.size());
-        }
+    
+    public void addNewTask(String newTask){
+        atodoItems.add(newTask);
+        writeItem();
+        Log.d(TAG, "Items count : " + todoItems.size());
     }
-
+    
     // Access list items from a file
     private void readItems(){
         // get standard directory
@@ -132,7 +131,9 @@ public class TodoActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_settings_additem) {
+            AddNewItemFragment addItemDialog = AddNewItemFragment.newInstance();
+            addItemDialog.show(getFragmentManager(), "Add Item");
             return true;
         }
 
