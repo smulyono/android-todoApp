@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -50,6 +51,8 @@ public class AddNewItemFragment extends DialogFragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // setting up theme
+        setStyle(DialogFragment.STYLE_NORMAL,android.R.style.Theme_Holo_Light_DarkActionBar);
     }
 
     @Override
@@ -83,7 +86,7 @@ public class AddNewItemFragment extends DialogFragment{
                 dialog.dismiss();
             }
         });
-
+        
         return alertDialogBuilder.create();
     }
 

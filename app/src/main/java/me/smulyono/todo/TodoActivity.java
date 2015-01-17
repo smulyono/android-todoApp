@@ -15,12 +15,17 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.activeandroid.ActiveAndroid;
+import com.activeandroid.query.Select;
+
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import me.smulyono.todo.models.TodoItems;
 
 
 public class TodoActivity extends ActionBarActivity {
@@ -75,9 +80,6 @@ public class TodoActivity extends ActionBarActivity {
                 i.putExtra("itemPosition", position);
                 
                 startActivityForResult(i, EDIT_REQUEST);
-
-//                EditItemNameFragment editItemNameDialog = EditItemNameFragment.newInstance("Edit Item");
-//                editItemNameDialog.show(getFragmentManager(), "Edit Item");
             }
         });
     }
@@ -90,24 +92,28 @@ public class TodoActivity extends ActionBarActivity {
     
     // Access list items from a file
     private void readItems(){
-        // get standard directory
-        File filesDir = getFilesDir();
-        Log.d(TAG, "File directory : " + filesDir.getAbsolutePath());
-        File todoFile = new File(filesDir, "todo.txt");
-        try {
-            todoItems = new ArrayList<String>(FileUtils.readLines(todoFile));
-        } catch (IOException ev){
-            todoItems = new ArrayList<String>();
+        // get data from DB
+        List<TodoItems> recs = new Select().from(TodoItems.class).execute();
+        todoItems = new ArrayList<String>();
+        if (recs != null && recs.size() > 0){
+            for (TodoItems rec : recs){
+                todoItems.add(rec.task);
+            }
         }
     }
 
     private void writeItem(){
-        File filesDir = getFilesDir();
-        File todoFile = new File(filesDir, "todo.txt");
+        // write data to DB
+        ActiveAndroid.beginTransaction();
         try {
-            FileUtils.writeLines(todoFile, todoItems);
-        } catch (IOException ev){
-            ev.printStackTrace();
+            for (String todoItem : todoItems){
+                TodoItems rec = new TodoItems();
+                rec.task = todoItem;
+                rec.save();
+            }
+            ActiveAndroid.setTransactionSuccessful();
+        } finally {
+            ActiveAndroid.endTransaction();
         }
     }
 
