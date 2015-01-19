@@ -12,10 +12,8 @@
         android:text="@string/saveBtnText"
         android:id="@+id/button"
         android:onClick="onEditedItem"
-        android:layout_below="@+id/etEditItem"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="24dp" />
+        android:layout_below="@+id/ratingBar"
+        android:layout_alignParentStart="true" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -38,4 +36,13 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginTop="31dp" />
+
+    <RatingBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ratingBar"
+        android:layout_below="@+id/etEditItem"
+        android:layout_alignParentStart="true"
+        android:rating="5"
+        android:stepSize="0.1" />
 </RelativeLayout>

@@ -39,6 +39,7 @@ public class EditItemActivity extends ActionBarActivity {
     private void layoutItemAssignment(){
         // get the passed item
         String itemName = getIntent().getStringExtra("itemName");
+        
         position = getIntent().getExtras().getInt("itemPosition");
         Log.d(TAG, "Receiving itemName " + itemName);
         Log.d(TAG, "Item position :: " + position);

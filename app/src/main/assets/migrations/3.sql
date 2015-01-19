@@ -1,0 +1,1 @@
+ALTER TABLE TodoItems ADD COLUMN priority INTEGER;

@@ -16,6 +16,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import me.smulyono.todo.models.TodoItems;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -63,6 +65,7 @@ public class AddNewItemFragment extends DialogFragment{
         // add input
         etAddItem = new EditText(getActivity());
         etAddItem.setHint(R.string.addItemHint);
+        
         alertDialogBuilder.setView(etAddItem);
         
         alertDialogBuilder.setPositiveButton(R.string.addBtn,  new DialogInterface.OnClickListener() {
@@ -74,7 +77,12 @@ public class AddNewItemFragment extends DialogFragment{
                 if (!newTask.isEmpty()){
                     Log.d(TAG, "New Task :: " + etAddItem.getText().toString());
                     TodoActivity parent = (TodoActivity) getActivity();
-                    parent.addNewTask(etAddItem.getText().toString());
+                    TodoItems rec = new TodoItems();
+                    rec.task = etAddItem.getText().toString();
+                    // show some random rating
+                    rec.priority = ((int) Math.round(Math.random() * 5));
+
+                    parent.addNewTask(rec);
                     // close dialog
                     dialog.dismiss();
                 }

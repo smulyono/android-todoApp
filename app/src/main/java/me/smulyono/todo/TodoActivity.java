@@ -8,7 +8,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -24,10 +23,12 @@ import me.smulyono.todo.models.TodoItems;
 public class TodoActivity extends ActionBarActivity {
     private final String TAG = this.getClass().getSimpleName();
     // Internal representations of the todo item list
-    private List<String> todoItems;
+//    private List<String> todoItems;
+    private ArrayList<TodoItems> todoItems;
     // every view component will use Adapter as their models
     // Type accepted by ArrayAdapter can be any Object
-    private ArrayAdapter<String> atodoItems;
+//    private ArrayAdapter<String> atodoItems;
+    private TodoItemAdapter atodoItems;
     // List view UI reference
     private ListView lvItems;
     // REQUEST_CODE used to determine result type
@@ -41,9 +42,12 @@ public class TodoActivity extends ActionBarActivity {
         lvItems = (ListView) findViewById(R.id.lvItems);
         readItems();
         // create adapter with the data (e.g list<String>)
-        atodoItems = new ArrayAdapter<String>(this,
-                                android.R.layout.simple_list_item_1,
-                                todoItems);
+//        atodoItems = new ArrayAdapter<String>(this,
+//                                android.R.layout.simple_list_item_1,
+//                                todoItems);
+        // using customAdapter view
+        atodoItems = new TodoItemAdapter(this, todoItems);
+        
         // attach adapter
         lvItems.setAdapter(atodoItems);
         // attach listener
@@ -69,7 +73,7 @@ public class TodoActivity extends ActionBarActivity {
                 // http://guides.codepath.com/android/Using-Intents-to-Create-Flows
                 Intent i = new Intent(TodoActivity.this, EditItemActivity.class);
                 // passing parameters there
-                i.putExtra("itemName", todoItems.get(position));
+                i.putExtra("itemName", todoItems.get(position).task);
                 i.putExtra("itemPosition", position);
                 
                 startActivityForResult(i, EDIT_REQUEST);
@@ -77,7 +81,7 @@ public class TodoActivity extends ActionBarActivity {
         });
     }
     
-    public void addNewTask(String newTask){
+    public void addNewTask(TodoItems newTask){
         atodoItems.add(newTask);
         writeItem();
         Log.d(TAG, "Items count : " + todoItems.size());
@@ -87,10 +91,10 @@ public class TodoActivity extends ActionBarActivity {
     private void readItems(){
         // get data from DB
         List<TodoItems> recs = new Select().from(TodoItems.class).execute();
-        todoItems = new ArrayList<String>();
+        todoItems = new ArrayList<TodoItems>();
         if (recs != null && recs.size() > 0){
             for (TodoItems rec : recs){
-                todoItems.add(rec.task);
+                todoItems.add(rec);
             }
         }
     }
@@ -99,10 +103,8 @@ public class TodoActivity extends ActionBarActivity {
         // write data to DB
         ActiveAndroid.beginTransaction();
         try {
-            for (String todoItem : todoItems){
-                TodoItems rec = new TodoItems();
-                rec.task = todoItem;
-                rec.save();
+            for (TodoItems todoItem : todoItems){
+                todoItem.save();
             }
             ActiveAndroid.setTransactionSuccessful();
         } finally {
@@ -147,7 +149,14 @@ public class TodoActivity extends ActionBarActivity {
             int position = data.getExtras().getInt("itemPosition");
             if (newItemName != null && !newItemName.isEmpty()) {
                 Log.d(TAG, "Updating " + position + " with " + newItemName);
-                todoItems.set(position, newItemName);
+                
+                // get the old TodoItems record
+                TodoItems rec =  todoItems.get(position);
+                rec.task = newItemName;
+                // show some random rating
+                rec.priority = ((int) Math.round(Math.random() * 5));
+                todoItems.set(position, rec);
+                
                 flush();
                 // show some toast
                 Toast.makeText(this, R.string.editMessage, Toast.LENGTH_SHORT).show();
