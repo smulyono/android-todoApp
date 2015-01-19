@@ -15,7 +15,7 @@ public class TodoItems extends Model {
     public Long deadlineDate;
     
     @Column(name="priority")
-    public int priority;
+    public float priority;
     
     public TodoItems(){
         super();

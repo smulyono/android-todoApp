@@ -37,9 +37,11 @@ public class TodoActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
         setContentView(R.layout.activity_todo);
         //
         lvItems = (ListView) findViewById(R.id.lvItems);
+
         readItems();
         // create adapter with the data (e.g list<String>)
 //        atodoItems = new ArrayAdapter<String>(this,
@@ -74,6 +76,7 @@ public class TodoActivity extends ActionBarActivity {
                 Intent i = new Intent(TodoActivity.this, EditItemActivity.class);
                 // passing parameters there
                 i.putExtra("itemName", todoItems.get(position).task);
+                i.putExtra("itemPriority", todoItems.get(position).priority);
                 i.putExtra("itemPosition", position);
                 
                 startActivityForResult(i, EDIT_REQUEST);
@@ -89,6 +92,7 @@ public class TodoActivity extends ActionBarActivity {
     
     // Access list items from a file
     private void readItems(){
+        ActiveAndroid.clearCache();
         // get data from DB
         List<TodoItems> recs = new Select().from(TodoItems.class).execute();
         todoItems = new ArrayList<TodoItems>();
@@ -147,14 +151,15 @@ public class TodoActivity extends ActionBarActivity {
         if (requestCode == EDIT_REQUEST && resultCode == RESULT_OK){
             String newItemName = data.getExtras().getString("itemName");
             int position = data.getExtras().getInt("itemPosition");
+            float newPriority = data.getExtras().getFloat("itemPriority");
             if (newItemName != null && !newItemName.isEmpty()) {
-                Log.d(TAG, "Updating " + position + " with " + newItemName);
+                Log.d(TAG, "Updating " + position + " with " + newItemName + " and priority " + newPriority);
                 
                 // get the old TodoItems record
                 TodoItems rec =  todoItems.get(position);
                 rec.task = newItemName;
                 // show some random rating
-                rec.priority = ((int) Math.round(Math.random() * 5));
+                rec.priority = newPriority;
                 todoItems.set(position, rec);
                 
                 flush();

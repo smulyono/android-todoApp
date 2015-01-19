@@ -14,7 +14,7 @@
             android:value="Todo.db" />
         <meta-data
             android:name="AA_DB_VERSION"
-            android:value="3" />
+            android:value="4" />
         // To avoid active android look on all files which will be slow
         <meta-data
             android:name="AA_MODELS"

@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RatingBar;
 
 import me.smulyono.todo.models.TodoItems;
 
@@ -33,6 +34,7 @@ public class AddNewItemFragment extends DialogFragment{
     private OnFragmentInteractionListener mListener;
     
     private EditText etAddItem;
+    private RatingBar etRatingPriority;
     
     /**
      * Use this factory method to create a new instance of
@@ -61,12 +63,17 @@ public class AddNewItemFragment extends DialogFragment{
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
         alertDialogBuilder.setTitle(R.string.addTxtTitle);
-    
-        // add input
-        etAddItem = new EditText(getActivity());
-        etAddItem.setHint(R.string.addItemHint);
         
-        alertDialogBuilder.setView(etAddItem);
+        View createTaskView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_create_item, null);
+        
+        // add input
+//        etAddItem = new EditText(getActivity());
+
+        etAddItem = (EditText) createTaskView.findViewById(R.id.etCreateTaskName);
+        etRatingPriority = (RatingBar) createTaskView.findViewById(R.id.rbCreatePriority);
+        etRatingPriority.setRating(1);
+        etAddItem.setHint(R.string.addItemHint);
+        alertDialogBuilder.setView(createTaskView);
         
         alertDialogBuilder.setPositiveButton(R.string.addBtn,  new DialogInterface.OnClickListener() {
             @Override
@@ -80,7 +87,7 @@ public class AddNewItemFragment extends DialogFragment{
                     TodoItems rec = new TodoItems();
                     rec.task = etAddItem.getText().toString();
                     // show some random rating
-                    rec.priority = ((int) Math.round(Math.random() * 5));
+                    rec.priority = etRatingPriority.getRating();
 
                     parent.addNewTask(rec);
                     // close dialog

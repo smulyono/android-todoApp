@@ -4,10 +4,9 @@ import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RatingBar;
 import android.widget.Toast;
 
 
@@ -16,6 +15,7 @@ public class EditItemActivity extends ActionBarActivity {
 
 
     private EditText etEditItem;
+    private RatingBar rbEditPriority;
     private int position;
 
     public void onEditedItem(View v){
@@ -24,6 +24,7 @@ public class EditItemActivity extends ActionBarActivity {
             Intent data = new Intent();
             // pass back the new edited item name
             data.putExtra("itemName", etEditItem.getText().toString());
+            data.putExtra("itemPriority", rbEditPriority.getRating());
             // pass back the position
             data.putExtra("itemPosition", position);
             // pass back the result
@@ -39,6 +40,7 @@ public class EditItemActivity extends ActionBarActivity {
     private void layoutItemAssignment(){
         // get the passed item
         String itemName = getIntent().getStringExtra("itemName");
+        float itemPriority = getIntent().getIntExtra("itemPriority", 1);
         
         position = getIntent().getExtras().getInt("itemPosition");
         Log.d(TAG, "Receiving itemName " + itemName);
@@ -48,6 +50,8 @@ public class EditItemActivity extends ActionBarActivity {
         if (!itemName.isEmpty()) {
             etEditItem.setText(itemName);
         }
+        rbEditPriority = (RatingBar) findViewById(R.id.editPriority);
+        rbEditPriority.setRating(itemPriority);
     }
 
     @Override
