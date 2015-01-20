@@ -40,7 +40,7 @@ public class EditItemActivity extends ActionBarActivity {
     private void layoutItemAssignment(){
         // get the passed item
         String itemName = getIntent().getStringExtra("itemName");
-        float itemPriority = getIntent().getIntExtra("itemPriority", 1);
+        float itemPriority = getIntent().getFloatExtra("itemPriority", 1);
         
         position = getIntent().getExtras().getInt("itemPosition");
         Log.d(TAG, "Receiving itemName " + itemName);
